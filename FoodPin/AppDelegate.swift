@@ -16,6 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        // 打印sqlite数据库文件地址
+        let sqlitePath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        print(sqlitePath[0])
         // 标题颜色
         UINavigationBar.appearance().barTintColor = UIColor(red: 231/255, green: 95/255, blue: 53/255, alpha: 0.3)
         // 标题栏按钮颜色
