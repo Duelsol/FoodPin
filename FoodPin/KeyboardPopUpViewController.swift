@@ -34,6 +34,11 @@ class KeyboardPopUpViewController: UIViewController, UIGestureRecognizerDelegate
         super.didReceiveMemoryWarning()
     }
 
+    deinit {
+        // 关闭监听
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
     func keyboardWillShow(note: NSNotification) {
         let userInfo  = note.userInfo as NSDictionary?
         let duration = (userInfo?[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue // 键盘弹出的动画事件
