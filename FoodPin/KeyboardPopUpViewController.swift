@@ -35,7 +35,6 @@ class KeyboardPopUpViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     deinit {
-        // 关闭监听
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
@@ -81,7 +80,7 @@ class KeyboardPopUpViewController: UIViewController, UIGestureRecognizerDelegate
     // 测试按钮事件，进行各种古怪的实验
     @IBAction func buttonBeTapped(sender: AnyObject) {
         // 跳转系统设置界面
-        let url = NSURL(string: "prefs:root=WIFI")
+        let url = NSURL(string: UIApplicationOpenSettingsURLString)
         if UIApplication.sharedApplication().canOpenURL(url!) {
             UIApplication.sharedApplication().openURL(url!)
         }
