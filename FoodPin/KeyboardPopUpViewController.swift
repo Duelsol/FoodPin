@@ -35,6 +35,7 @@ class KeyboardPopUpViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     deinit {
+        // 关闭监听
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
