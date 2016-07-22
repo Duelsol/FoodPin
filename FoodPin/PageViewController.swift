@@ -31,14 +31,14 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     // 下一个page
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         var index = (viewController as! PageContentViewController).index
-        index++
+        index += 1
         return self.viewControllerAtIndex(index)
     }
 
     // 上一个page
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
         var index = (viewController as! PageContentViewController).index
-        index--
+        index -= 1
         return self.viewControllerAtIndex(index)
     }
 

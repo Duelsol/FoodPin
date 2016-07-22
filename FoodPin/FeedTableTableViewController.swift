@@ -22,7 +22,7 @@ class FeedTableTableViewController: UITableViewController {
         refreshControl = UIRefreshControl()
         refreshControl?.backgroundColor = UIColor.whiteColor()
         refreshControl?.tintColor = UIColor.grayColor()
-        refreshControl?.addTarget(self, action: "getRecordsFormCloud", forControlEvents: .ValueChanged)
+        refreshControl?.addTarget(self, action: #selector(FeedTableTableViewController.getRecordsFormCloud), forControlEvents: .ValueChanged)
     }
 
     override func didReceiveMemoryWarning() {

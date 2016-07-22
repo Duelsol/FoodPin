@@ -54,7 +54,7 @@ class RestaurantTableViewController: UITableViewController, NSFetchedResultsCont
 
         // 如果没数据，插入默认数据
         if restaurants.count == 0 {
-            for var i = 0; i < Restaurant.restaurantNames.count; i++ {
+            for i in 0 ..< Restaurant.restaurantNames.count {
                 let restaurant = NSEntityDescription.insertNewObjectForEntityForName("Restaurant", inManagedObjectContext: managedObjectContext) as! Restaurant
                 restaurant.make(Restaurant.restaurantNames[i], type: Restaurant.restauranyTypes[i], location: Restaurant.restaurantLocations[i], image: UIImagePNGRepresentation(UIImage(named: Restaurant.restaurantImages[i])!)!, isVisited: Restaurant.restaurantIsVisited[i])
                 do {

@@ -21,13 +21,13 @@ class KeyboardPopUpViewController: UIViewController, UIGestureRecognizerDelegate
         navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         // 捕捉屏幕中任何手势，这里是用来恢复键盘区域成初始位置
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTouches:")
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(KeyboardPopUpViewController.handleTouches(_:)))
         tapGestureRecognizer.cancelsTouchesInView = false
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
         // 注册键盘显示与隐藏的观察者
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(KeyboardPopUpViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(KeyboardPopUpViewController.keyboardWillHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
 
     override func didReceiveMemoryWarning() {
