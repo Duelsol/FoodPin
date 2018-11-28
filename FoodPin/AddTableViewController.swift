@@ -32,60 +32,60 @@ class AddTableViewController: UITableViewController, UIImagePickerControllerDele
         // Dispose of any resources that can be recreated.
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             // .Camera开启拍照
-            if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
                 imagePicker.allowsEditing = false
-                imagePicker.sourceType = .PhotoLibrary
-                self.presentViewController(imagePicker, animated: true, completion: nil)
+                imagePicker.sourceType = .photoLibrary
+                self.present(imagePicker, animated: true, completion: nil)
             }
         }
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     // imagePicker回调
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        imageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        imageView.contentMode = UIViewContentMode.ScaleAspectFill
+    private func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        imageView.image = info[UIImagePickerController.InfoKey.originalImage.rawValue] as? UIImage
+        imageView.contentMode = UIView.ContentMode.scaleAspectFill
         imageView.clipsToBounds = true
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
     // saveButton点击事件
-    @IBAction func saveButtonBeTapped(sender: AnyObject) {
+    @IBAction func saveButtonBeTapped(_ sender: Any) {
         let name = nameTextField.text
         let type = typeTextField.text
         let location = locationTextField.text
         if name == "" || type == "" || location == "" {
-            let alert = UIAlertController(title: "请填写所有基本信息", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "请填写所有基本信息", message: nil, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         } else {
-            let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-            let restaurant = NSEntityDescription.insertNewObjectForEntityForName("Restaurant", inManagedObjectContext: managedObjectContext) as! Restaurant
-            restaurant.make(name!, type: type!, location: location!, image: UIImagePNGRepresentation(imageView.image!)!, isVisited: isVisited)
+            let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+            let restaurant = NSEntityDescription.insertNewObject(forEntityName: "Restaurant", into: managedObjectContext) as! Restaurant
+            restaurant.make(name: name!, type: type!, location: location!, image: imageView.image!.pngData()!, isVisited: isVisited)
             do {
                 try managedObjectContext.save()
             } catch {
                 print("insert error")
             }
 //            saveRecordToCloud(restaurant)
-            performSegueWithIdentifier("unwindToHomeScreen", sender: self)
+            performSegue(withIdentifier: "unwindToHomeScreen", sender: self)
         }
     }
 
     // yesButton点击事件
-    @IBAction func yesButtonBeTapped(sender: AnyObject) {
-        yesButton.backgroundColor = UIColor.redColor()
-        noButton.backgroundColor = UIColor.grayColor()
+    @IBAction func yesButtonBeTapped(_ sender: Any) {
+        yesButton.backgroundColor = UIColor.red
+        noButton.backgroundColor = UIColor.gray
         isVisited = true
     }
 
     // noButton点击事件
-    @IBAction func noButtonBeTapped(sender: AnyObject) {
-        yesButton.backgroundColor = UIColor.grayColor()
-        noButton.backgroundColor = UIColor.redColor()
+    @IBAction func noButtonBeTapped(_ sender: Any) {
+        yesButton.backgroundColor = UIColor.gray
+        noButton.backgroundColor = UIColor.red
         isVisited = false
     }
 
@@ -102,50 +102,26 @@ class AddTableViewController: UITableViewController, UIImagePickerControllerDele
 
         // 存储到临时目录
         let imageFilePath = NSTemporaryDirectory() + restaurant.name
-        UIImageJPEGRepresentation(scaledImage!, 0.8)?.writeToFile(imageFilePath, atomically: true)
+        do {
+            try scaledImage?.jpegData(compressionQuality: 0.8)?.write(to: URL(fileURLWithPath: imageFilePath), options: .atomic)
+        } catch {
+            print("Failed to write image to file")
+        }
 
-        let imageFileURL = NSURL(fileURLWithPath: imageFilePath)
+        let imageFileURL = URL(fileURLWithPath: imageFilePath)
         let imageAsset = CKAsset(fileURL: imageFileURL)
         record.setValue(imageAsset, forKeyPath: "image")
 
         // 保存至iCloud
-        let publicDatabase = CKContainer.defaultContainer().publicCloudDatabase
-        publicDatabase.saveRecord(record, completionHandler: {(recotd: CKRecord?, error: NSError?) -> Void in
+        let publicDatabase = CKContainer.default().publicCloudDatabase
+        publicDatabase.save(record, completionHandler: {(recotd: CKRecord?, error: NSError?) -> Void in
             // 保存文件
             do {
-                try NSFileManager.defaultManager().removeItemAtPath(imageFilePath)
+                try FileManager.default.removeItem(atPath: imageFilePath)
             } catch {
                 print("Failed to save record to the cloud")
             }
-        })
-    }
-
-}
-
-// 借个地方放一下，下面是输入框的基本验证
-extension UITextField {
-
-    var notEmpty: Bool {
-        get {
-            return self.text != ""
-        }
-    }
-
-    func validate(RegEx: String) -> Bool {
-        let predicate = NSPredicate(format: "SELF MATCHES %@", RegEx)
-        return predicate.evaluateWithObject(self.text)
-    }
-
-    func validateEmail() -> Bool {
-        return self.validate("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}")
-    }
-
-    func validatePhoneNumber() -> Bool {
-        return self.validate("^\\d{11}$")
-    }
-
-    func validatePassword() -> Bool {
-        return self.validate("^[A-Z0-9a-z]{6,18}")
+        } as! (CKRecord?, Error?) -> Void)
     }
 
 }

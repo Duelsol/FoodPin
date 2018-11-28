@@ -23,7 +23,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(restaurant.location, completionHandler: {placemarks, error in
             if error != nil {
-                print(error, true)
+                print(error!, true)
             }
 
             if placemarks != nil && placemarks!.count > 0 {
@@ -40,20 +40,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         })
     }
 
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "MyPin"
 
-        if annotation.isKindOfClass(MKUserLocation) {
+        if annotation is MKUserLocation {
             return nil
         }
 
-        var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier)
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
 //        if annotation == nil {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
 //        }
 
-        let leftIconView = UIImageView(frame: CGRectMake(0, 0, 53, 53))
+        let leftIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 53, height: 53))
         leftIconView.image = UIImage(data: restaurant.image)
         annotationView?.leftCalloutAccessoryView = leftIconView
 

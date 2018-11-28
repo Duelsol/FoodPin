@@ -15,7 +15,7 @@ class Restaurant: NSManagedObject {
     @NSManaged var name: String
     @NSManaged var type: String
     @NSManaged var location: String
-    @NSManaged var image: NSData
+    @NSManaged var image: Data
     @NSManaged var isVisited: Bool
 
     static var restaurantNames = ["Cafe Deadend", "Homei", "Teakha", "Cafe Loisl", "Petite Oyster", "For Kee Restaurant", "Po's Atelier", "Bourke Street Bakery", "Haigh's Chocolate", "Palomino Espresso", "Upstate", "Traif", "Graham Avenue Meats And Deli", "Waffle & Wolf", "Five Leaves", "Cafe Lore", "Confessional", "Barrafina", "Donostia", "Royal Oak", "CASK Pub and Kitchen"]
@@ -26,9 +26,9 @@ class Restaurant: NSManagedObject {
 
     static var restauranyTypes = ["Coffee & Tea Shop", "Cafe", "Tea House", "Austrian / Causual Drink", "French", "Bakery", "Bakery", "Chocolate", "Cafe", "American / Seafood", "American", "American", "Breakfast & Brunch", "Coffee & Tea", "Coffee & Tea", "Latin American", "Spanish", "Spanish", "Spanish", "British", "Thai"]
 
-    static var restaurantIsVisited = [Bool](count: 21, repeatedValue: false)
+    static var restaurantIsVisited = [Bool](repeating: false, count: 21)
 
-    func make(name: String, type: String, location: String, image: NSData, isVisited: Bool) {
+    func make(name: String, type: String, location: String, image: Data, isVisited: Bool) {
         self.name = name
         self.type = type
         self.location = location

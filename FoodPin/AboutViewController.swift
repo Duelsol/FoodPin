@@ -19,30 +19,30 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
         super.didReceiveMemoryWarning()
     }
 
-    @IBAction func sendEmail(sender: AnyObject) {
+    @IBAction func sendEmail(_ sender: Any) {
         if MFMailComposeViewController.canSendMail() {
             let composer = MFMailComposeViewController()
             composer.mailComposeDelegate = self
             composer.setToRecipients(["support@appcoda.com"])
-            composer.navigationBar.tintColor = UIColor.whiteColor()
-            presentViewController(composer, animated: true, completion: nil)
+            composer.navigationBar.tintColor = UIColor.white
+            present(composer, animated: true, completion: nil)
         }
     }
 
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        switch result.rawValue {
-        case MFMailComposeResultCancelled.rawValue:
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        switch result {
+        case .cancelled:
             print("Mail cancelled")
-        case MFMailComposeResultSaved.rawValue:
+        case .saved:
             print("Mail saved")
-        case MFMailComposeResultSent.rawValue:
+        case .sent:
             print("Mail sent")
-        case MFMailComposeResultFailed.rawValue:
-            print("Failed to send mail: \(error?.localizedDescription)")
+        case .failed:
+            print("Failed to send mail: \(error!.localizedDescription)")
         default:
             break
         }
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
 }

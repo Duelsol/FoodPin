@@ -19,8 +19,8 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
 
         dataSource = self
 
-        if let startingViewController = self.viewControllerAtIndex(0) {
-            setViewControllers([startingViewController], direction: .Forward, animated: true, completion: nil)
+        if let startingViewController = self.viewControllerAtIndex(index: 0) {
+            setViewControllers([startingViewController], direction: .forward, animated: true, completion: nil)
         }
     }
 
@@ -29,24 +29,24 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     }
 
     // 下一个page
-    func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         var index = (viewController as! PageContentViewController).index
         index += 1
-        return self.viewControllerAtIndex(index)
+        return self.viewControllerAtIndex(index: index)
     }
 
     // 上一个page
-    func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         var index = (viewController as! PageContentViewController).index
         index -= 1
-        return self.viewControllerAtIndex(index)
+        return self.viewControllerAtIndex(index: index)
     }
 
     func viewControllerAtIndex(index: Int) -> PageContentViewController? {
         if index == NSNotFound || index < 0 || index >= self.pageHeadings.count {
             return nil
         }
-        if let pageContentViewController = storyboard?.instantiateViewControllerWithIdentifier("PageContentViewController") as? PageContentViewController {
+        if let pageContentViewController = storyboard?.instantiateViewController(withIdentifier: "PageContentViewController") as? PageContentViewController {
             pageContentViewController.imageFile = pageImages[index]
             pageContentViewController.heading = pageHeadings[index]
             pageContentViewController.subHeading = pageSubHeadings[index]
@@ -57,8 +57,8 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     }
 
     func forward(index: Int) {
-        if let nextViewController = self.viewControllerAtIndex(index + 1) {
-            setViewControllers([nextViewController], direction: .Forward, animated: true, completion: nil)
+        if let nextViewController = self.viewControllerAtIndex(index: index + 1) {
+            setViewControllers([nextViewController], direction: .forward, animated: true, completion: nil)
         }
     }
 

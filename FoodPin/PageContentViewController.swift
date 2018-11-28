@@ -29,24 +29,24 @@ class PageContentViewController: UIViewController {
         subHeadingLabel.text = subHeading
         contentImageView.image = UIImage(named: imageFile)
         pageControl.currentPage = index
-        getStartedButton.hidden = (index == 2) ? false : true
-        forwardButton.hidden = (index == 2) ? true : false
+        getStartedButton.isHidden = (index == 2) ? false : true
+        forwardButton.isHidden = (index == 2) ? true : false
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    @IBAction func close(sender: AnyObject) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setBool(true, forKey: "hasViewedWalkthrough")
+    @IBAction func close(_ sender: Any) {
+        let defaults = UserDefaults.standard
+        defaults.set(true, forKey: "hasViewedWalkthrough")
 
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
-    @IBAction func nextScreen(sender: AnyObject) {
-        let pageViewController = self.parentViewController as! PageViewController
-        pageViewController.forward(index)
+    @IBAction func nextScreen(_ sender: Any) {
+        let pageViewController = self.parent as! PageViewController
+        pageViewController.forward(index: index)
     }
 
 }
